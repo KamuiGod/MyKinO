@@ -1,1 +1,10 @@
-Tous les produits.
+<h2>Chercher Produit</h2>
+<form action="products" method="GET">
+    <label>Nom</label>
+    <input type="text" name="name" value="<%= searchOptions.name %> ">
+    <button type="submit">Rechercher</button>
+</form>
+<br>
+<% products.forEach(product => { %>
+    <div><%= product.name %></div>
+<% }) %>
