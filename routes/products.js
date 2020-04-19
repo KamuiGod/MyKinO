@@ -1,17 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const multer = require('multer')
-const path = require('path')
-const fs = require('fs')
 const Products = require('../models/products')
-const uploadPath = path.join('public', Products.coverImageBasePath)
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
-const upload = multer({
-    dest: uploadPath,
-    fileFilter: (req, file, callback) => {
-        callback(null, imageMimeTypes.includes(file.mimetype))
-    }
-})
+
 
 // All Products Route
 router.get('/', async (req, res) => {
@@ -40,23 +31,23 @@ router.get('/new', (req, res) => {
 })
 
 // Create Product Route
-router.post('/', upload.single('cover'), async (req, res) => {
-    const fileName = req.file != null ? req.file.filename : null
+router.post('/', async (req, res) => {
     const product = new Products({
         name: req.body.name,
         referenceID: req.body.referenceID,
         price: req.body.price,
-        coverImage: fileName,
         description: req.body.description,
     })
+    saveCover(product, req.body.cover)
+
     try {
         const newProduct = await product.save()
         //res.redirect(`products/${newProducts.id}`)
         res.redirect('/products')
     } catch {
-        if (product.coverImage != null) {
-            removeProductCover(product.coverImage)
-        }
+        //if (product.coverImage != null) {
+        //    removeProductCover(product.coverImage)
+        //}
         res.render('products/new', {
             product: product,
             errorMessage: "Erreur lors de la création du produit"
@@ -64,10 +55,19 @@ router.post('/', upload.single('cover'), async (req, res) => {
     }
 })
 
-function removeProductCover(fileName) {
-    fs.unlink(path.join(uploadPath, fileName), err => {
-        if (err) console.error(err)
-    })
+//function removeProductCover(fileName) {
+//    fs.unlink(path.join(uploadPath, fileName), err => {
+//        if (err) console.error(err)
+//    })
+//}
+
+function saveCover(product, coverEncoded) {
+    if (coverEncoded == null) return
+    const cover = JSON.parse(coverEncoded)
+    if (cover != null && imageMimeTypes.includes(cover.type)) {
+        product.coverImage = new Buffer.from(cover.data, 'base64')
+        product.coverImageType = cover.type
+    }
 }
 
 module.exports = router
