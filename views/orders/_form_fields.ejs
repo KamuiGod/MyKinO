@@ -1,0 +1,21 @@
+<div>
+    <label>Description</label>
+    <input type="text" name="description" placeholder="Ajouter une description" value="<%= order.name %>">
+</div>
+<div>
+    <label>Créée le </label>
+    <input type="date" name="createdAt" 
+           value="<%= order.createdAt == null ? '' : order.createdAt.toISOString().split('T')[0] %>">
+</div>
+<div>
+    <label>Produit</label>
+    <select name="product">
+        <% products.forEach(product => { %>
+            <% if (products.id == order.product) { %>
+                <option selected label="<%= product.name %>" value="<%= product.id %>"></option>
+                <% } else { %>
+                    <option label="<%= product.name %>" value="<%= product.id %>"></option>
+                    <% } %>
+            <% }) %>
+        </select>
+</div>

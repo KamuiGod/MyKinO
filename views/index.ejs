@@ -1,1 +1,7 @@
-Middle
+<h2>Récemment ajoutés</h2>
+<div>
+    <% products.forEach(product => { %>
+        <img height="300" width="240" src="<%= product.coverImagePath %>">
+        <h4><%= product.name %></h4>
+    <% }) %>
+</div>

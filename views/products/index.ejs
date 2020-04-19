@@ -1,10 +1,17 @@
 <h2>Chercher Produit</h2>
 <form action="products" method="GET">
-    <label>Nom</label>
-    <input type="text" name="name" value="<%= searchOptions.name %> ">
+    <div>
+        <label>Nom</label>
+        <input type="text" name="name" value="<%= searchOptions.name %> ">
+    </div>
+    <div>
+        <label>Référence</label>
+        <input type="text" name="referenceID" value="<%= searchOptions.referenceID %> ">
+    </div>
     <button type="submit">Rechercher</button>
 </form>
-<br>
+<div>
 <% products.forEach(product => { %>
-    <div><%= product.name %></div>
+    <img height="275" width="200" src="<%= product.coverImagePath %>">
 <% }) %>
+</div>
